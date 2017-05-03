@@ -181,3 +181,22 @@ services:
       - PGHOST=postgis
       - PGDATABASE=gis
     network_mode: "bridge"
+
+  sftppgbackup: &sftppgbackup
+    image: kartoza/sftp-backup:1.0
+    hostname: sftppgbackup
+    volumes:
+      # this folder is used to store local backups from pg dbbackup
+      - ./sftp_backup/backups/pg:/backups
+      # this folder is used as target folder/source where the backup comes from
+      # this backup comes from dbbackup
+      - ./sftp_backup/target/pg:/pg_backup
+    environment:
+      - DUMPPREFIX=PG_inasafegeonode
+      - DAILY=14
+      - MONTHLY=12
+      - YEARLY=3
+      # set this to the target/source folder where the backup comes from
+      - TARGET_FOLDER=/pg_backup
+    env_file:
+      - sftp_pg_credential.env
