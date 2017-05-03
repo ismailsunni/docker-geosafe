@@ -159,3 +159,25 @@ services:
       - rabbitmq:rabbitmq
       - nginx:nginx
     network_mode: "bridge"
+
+  dbbackup: &dbbackup
+    build: docker-backup
+    hostname: pg-backups
+    volumes:
+      - ./pg/dbbackup/backups:/backups
+      # this folder is used as target folder for sftppgbackup as the
+      # source folder
+      - ./sftp_backup/target/pg:/pg_backup
+    links:
+      - postgis
+    environment:
+      # make this equal to PG_$(PROJECT_ID) in makefile
+      - DUMPPREFIX=PG_inasafegeonode
+      # These are all defaults anyway, but setting explicitly in
+      # case we ever want to ever use different credentials
+      - PGUSER=docker
+      - PGPASSWORD=docker
+      - PGPORT=5432
+      - PGHOST=postgis
+      - PGDATABASE=gis
+    network_mode: "bridge"
