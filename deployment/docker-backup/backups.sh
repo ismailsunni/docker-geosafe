@@ -14,6 +14,7 @@ MYBACKUPDIR=${MYBASEDIR}/${YEAR}/${MONTH}
 mkdir -p ${MYBACKUPDIR}
 cd ${MYBACKUPDIR}
 
+date >> /var/log/cron.log
 echo "Backup running to $MYBACKUPDIR" >> /var/log/cron.log
 
 #
