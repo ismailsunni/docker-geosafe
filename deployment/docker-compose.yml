@@ -200,3 +200,41 @@ services:
       - TARGET_FOLDER=/pg_backup
     env_file:
       - sftp_pg_credential.env
+
+  sftpmediabackup: &sftpmediabackup
+    image: kartoza/sftp-backup:1.0
+    hostname: sftpmediabackup
+    volumes:
+      # this folder is used to store local backups from django media
+      - ./sftp_backup/backups/media:/backups
+      # this folder is used as target folder/source where the backup comes from
+      # this backup comes from django media
+      - ../src/geonode/geonode/uploaded:/media_backup
+    environment:
+      - DUMPPREFIX=MEDIA_inasafegeonode
+      # reduce frequency because the dump is really big
+      - DAILY=3
+      - MONTHLY=2
+      - YEARLY=1
+      - TARGET_FOLDER=/media_backup
+    env_file:
+      - sftp_media_credential.env
+
+  sftplayerbackup: &sftplayerbackup
+    image: kartoza/sftp-backup:1.0
+    hostname: sftplayerbackup
+    volumes:
+      # this folder is used to store local backups from django media
+      - ./sftp_backup/backups/layer:/backups
+      # this folder is used as target folder/source where the backup comes from
+      # this backup comes from django media
+      - ../src/geonode/geonode/qgis_layer:/media_backup
+    environment:
+      - DUMPPREFIX=LAYER_inasafegeonode
+      # reduce frequency because the dump is really big
+      - DAILY=3
+      - MONTHLY=2
+      - YEARLY=1
+      - TARGET_FOLDER=/layer_backup
+    env_file:
+      - sftp_layer_credential.env
