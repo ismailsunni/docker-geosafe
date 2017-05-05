@@ -101,3 +101,8 @@ deployment/docker-compose.override.yml
 pycharm_helpers
 
 !.gitkeep
+deployment/sftp_backup/
+deployment/sftp_layer_credential.env
+deployment/sftp_media_credential.env
+deployment/sftp_pg_credential-dev.env
+deployment/sftp_pg_credential.env
