@@ -227,8 +227,8 @@ services:
       # this folder is used to store local backups from django media
       - ./sftp_backup/backups/layer:/backups
       # this folder is used as target folder/source where the backup comes from
-      # this backup comes from django media
-      - ../src/geonode/geonode/qgis_layer:/media_backup
+      # this backup comes from qgis layer directory
+      - ../src/geonode/geonode/qgis_layer:/layer_backup
     environment:
       - DUMPPREFIX=LAYER_inasafegeonode
       # reduce frequency because the dump is really big
