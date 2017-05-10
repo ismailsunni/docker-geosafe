@@ -5,12 +5,12 @@ services:
   elasticsearch:
     image: elasticsearch
     network_mode: "bridge"
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   rabbitmq:
     image: rabbitmq
     network_mode: "bridge"
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   postgis:
     image: kartoza/postgis:9.4-2.1
@@ -20,7 +20,7 @@ services:
       - POSTGRES_USER=docker
       - POSTGRES_PASS=docker
     network_mode: "bridge"
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   qgis-server:
     build: docker-qgis-server
@@ -43,7 +43,7 @@ services:
     links:
       - postgis
     network_mode: "bridge"
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   django:
     build: docker-geonode
@@ -74,7 +74,7 @@ services:
       - inasafe-output
       - qgis-server
     network_mode: "bridge"
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   nginx:
 #    image: geonode/nginx
@@ -87,7 +87,7 @@ services:
 #    ports:
 #      - "80:80"
     network_mode: "bridge"
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   celery:
     build: docker-geonode
@@ -119,7 +119,7 @@ services:
       - inasafe-output
       - qgis-server
     network_mode: "bridge"
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   inasafe-output:
     image: nginx
@@ -128,7 +128,7 @@ services:
     ports:
       - "8081:80"
     network_mode: "bridge"
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   inasafe-headless:
     build: docker-inasafe-headless
@@ -148,7 +148,7 @@ services:
       - rabbitmq:rabbitmq
       - nginx:nginx
     network_mode: "bridge"
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   inasafe-headless-analysis:
     build: docker-inasafe-headless
@@ -168,7 +168,7 @@ services:
       - rabbitmq:rabbitmq
       - nginx:nginx
     network_mode: "bridge"
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   dbbackup: &dbbackup
     build: docker-backup
@@ -191,7 +191,7 @@ services:
       - PGHOST=postgis
       - PGDATABASE=gis
     network_mode: "bridge"
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   sftppgbackup: &sftppgbackup
     image: kartoza/sftp-backup:1.0
@@ -211,7 +211,7 @@ services:
       - TARGET_FOLDER=/pg_backup
     env_file:
       - sftp_pg_credential.env
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   sftpmediabackup: &sftpmediabackup
     image: kartoza/sftp-backup:1.0
@@ -231,7 +231,7 @@ services:
       - TARGET_FOLDER=/media_backup
     env_file:
       - sftp_media_credential.env
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   sftplayerbackup: &sftplayerbackup
     image: kartoza/sftp-backup:1.0
@@ -251,7 +251,7 @@ services:
       - TARGET_FOLDER=/layer_backup
     env_file:
       - sftp_layer_credential.env
-    restart: unless-stopped:5
+    restart: unless-stopped
 
   btsync:
     image: kartoza/btsync
@@ -261,4 +261,4 @@ services:
       - /home/docker-geosafe/deployment/sftp_backup:/web
     env_file:
       - btsync.env
-    restart: unless-stopped:5
+    restart: unless-stopped

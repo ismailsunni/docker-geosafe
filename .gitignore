@@ -106,3 +106,4 @@ deployment/sftp_layer_credential.env
 deployment/sftp_media_credential.env
 deployment/sftp_pg_credential-dev.env
 deployment/sftp_pg_credential.env
+deployment/btsync.env
