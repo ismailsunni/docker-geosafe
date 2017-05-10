@@ -5,10 +5,12 @@ services:
   elasticsearch:
     image: elasticsearch
     network_mode: "bridge"
+    restart: unless-stopped:5
 
   rabbitmq:
     image: rabbitmq
     network_mode: "bridge"
+    restart: unless-stopped:5
 
   postgis:
     image: kartoza/postgis:9.4-2.1
@@ -18,6 +20,7 @@ services:
       - POSTGRES_USER=docker
       - POSTGRES_PASS=docker
     network_mode: "bridge"
+    restart: unless-stopped:5
 
   qgis-server:
     build: docker-qgis-server
@@ -40,6 +43,7 @@ services:
     links:
       - postgis
     network_mode: "bridge"
+    restart: unless-stopped:5
 
   django:
     build: docker-geonode
@@ -70,6 +74,7 @@ services:
       - inasafe-output
       - qgis-server
     network_mode: "bridge"
+    restart: unless-stopped:5
 
   nginx:
 #    image: geonode/nginx
@@ -82,6 +87,7 @@ services:
 #    ports:
 #      - "80:80"
     network_mode: "bridge"
+    restart: unless-stopped:5
 
   celery:
     build: docker-geonode
@@ -113,6 +119,7 @@ services:
       - inasafe-output
       - qgis-server
     network_mode: "bridge"
+    restart: unless-stopped:5
 
   inasafe-output:
     image: nginx
@@ -121,6 +128,7 @@ services:
     ports:
       - "8081:80"
     network_mode: "bridge"
+    restart: unless-stopped:5
 
   inasafe-headless:
     build: docker-inasafe-headless
@@ -140,6 +148,7 @@ services:
       - rabbitmq:rabbitmq
       - nginx:nginx
     network_mode: "bridge"
+    restart: unless-stopped:5
 
   inasafe-headless-analysis:
     build: docker-inasafe-headless
@@ -159,6 +168,7 @@ services:
       - rabbitmq:rabbitmq
       - nginx:nginx
     network_mode: "bridge"
+    restart: unless-stopped:5
 
   dbbackup: &dbbackup
     build: docker-backup
@@ -181,6 +191,7 @@ services:
       - PGHOST=postgis
       - PGDATABASE=gis
     network_mode: "bridge"
+    restart: unless-stopped:5
 
   sftppgbackup: &sftppgbackup
     image: kartoza/sftp-backup:1.0
@@ -200,6 +211,7 @@ services:
       - TARGET_FOLDER=/pg_backup
     env_file:
       - sftp_pg_credential.env
+    restart: unless-stopped:5
 
   sftpmediabackup: &sftpmediabackup
     image: kartoza/sftp-backup:1.0
@@ -219,6 +231,7 @@ services:
       - TARGET_FOLDER=/media_backup
     env_file:
       - sftp_media_credential.env
+    restart: unless-stopped:5
 
   sftplayerbackup: &sftplayerbackup
     image: kartoza/sftp-backup:1.0
@@ -238,3 +251,14 @@ services:
       - TARGET_FOLDER=/layer_backup
     env_file:
       - sftp_layer_credential.env
+    restart: unless-stopped:5
+
+  btsync:
+    image: kartoza/btsync
+    container_name:  dockerosm_btsync
+    hostname: btsync
+    volumes:
+      - /home/docker-geosafe/deployment/sftp_backup:/web
+    env_file:
+      - btsync.env
+    restart: unless-stopped:5
